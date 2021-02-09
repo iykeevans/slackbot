@@ -5,8 +5,6 @@ import message from "../utils/messages";
 
 export default async (request: Request, response: Response) => {
   try {
-    console.log(request.body);
-
     const { command, channel_id } = request.body;
 
     if (command === "/hello") {
