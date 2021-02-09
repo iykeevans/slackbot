@@ -2,9 +2,22 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import logger from "morgan";
+import bodyParser from "body-parser";
+import env from "dotenv";
+
+import routes from "./routes";
+import errorHandler from "./middlewares/errorHandler";
+
+env.config();
 
 // invoke express
 const app = express();
+
+// Parse incoming requests data (https://github.com/expressjs/body-parser)
+app.use(bodyParser.json());
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // secure with helmet middleware
 app.use(helmet());
@@ -15,8 +28,29 @@ app.use(cors());
 // log requests to console
 app.use(logger("dev"));
 
-app.get("/ping", (req: express.Request, res: express.Response) => {
-  res.send("pong");
+app.use("/api/v1/bot/", routes);
+
+app.all("/", (request: express.Request, response: express.Response) => {
+  return response.json({
+    message: "Slackbot API",
+    status: "success",
+    data: {
+      name: "Ezeani Ikenna",
+      github: "@iykeevans",
+      email: "elochi238@gmail.com",
+      mobile: "07053052215",
+      twitter: "@iykeevan",
+    },
+  });
 });
+
+app.all("*", (request: express.Request, response: express.Response) => {
+  response.status(404).json({
+    status: "error",
+    message: "Route not found.",
+  });
+});
+
+app.use(errorHandler);
 
 export default app;
