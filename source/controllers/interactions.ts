@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
+import express from "express";
 
+import Response from "../models/response";
 import { sendInteractiveMessage, triggerModal } from "../services";
 import messages from "../utils/messages";
 
@@ -23,12 +24,11 @@ const userResponse: IUserResponse = {
 
 let lastBlockActionResponseUrl = "";
 
-export default async (request: Request, response: Response) => {
+export default async (request: express.Request, response: express.Response) => {
   try {
     response.json();
 
     const payload = JSON.parse(request.body.payload);
-    console.log(payload);
 
     if (payload.type === "block_actions") {
       switch (payload.actions[0].action_id) {
@@ -122,7 +122,9 @@ export default async (request: Request, response: Response) => {
         text: "thank you",
       });
 
-      console.log("userResponse END", userResponse);
+      userResponse.hobbies = userResponse.hobbies.map((item) => item.value);
+
+      await new Response(userResponse).save();
     }
   } catch (err) {
     throw err;
