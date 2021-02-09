@@ -7,8 +7,6 @@ export default async (request: Request, response: Response) => {
   try {
     const { challenge, event } = request.body;
 
-    console.log(event);
-
     if (challenge) {
       return response.json({ challenge });
     }

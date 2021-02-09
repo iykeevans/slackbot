@@ -1,22 +1,17 @@
 import axios from "axios";
+import env from "dotenv";
 
-import { SLACK_OAUTH_TOKEN } from "../constants";
+env.config();
 
 const baseURL = "https://slack.com/api";
-
-// axios.create({
-//   baseURL,
-//   headers: {
-//     "Content-Type": "application/json",
-//     Authorization: `Bearer ${SLACK_OAUTH_TOKEN}`,
-//   },
-// });
+const Authorization = `Bearer ${process.env.SLACK_OAUTH_TOKEN}`;
 
 export const sendMessage = (payload: any) => {
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer xoxb-1718634257717-1721753170850-KHVngcCCOMdSVkmF10VNxoLY`,
+    Authorization,
   };
+
   return axios.post(`${baseURL}/chat.postMessage`, payload, { headers });
 };
 
@@ -31,15 +26,17 @@ export const sendInteractiveMessage = (
 ) => {
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer xoxb-1718634257717-1721753170850-KHVngcCCOMdSVkmF10VNxoLY`,
+    Authorization,
   };
+
   return axios.post(responseUrl, payload, { headers });
 };
 
 export const triggerModal = (payload: any) => {
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer xoxb-1718634257717-1721753170850-KHVngcCCOMdSVkmF10VNxoLY`,
+    Authorization,
   };
+
   return axios.post(`${baseURL}/views.open`, payload, { headers });
 };
